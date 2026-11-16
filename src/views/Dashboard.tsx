@@ -4,7 +4,7 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 import { formatDate, formatDateTime, daysBetween, todayStr } from '@/lib/helpers';
 import type { ViewName } from '@/components/Layout';
 import {
-  CheckCircle2, XCircle, FlaskConical, Clock, Truck, Package,
+  CheckCircle2, XCircle, FlaskConical, Clock,
   MapPin, AlertTriangle, ClipboardCheck, Bell,
 } from 'lucide-react';
 
@@ -13,7 +13,7 @@ interface DashboardProps {
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
-  const { tanks, tests, movements, notifications, currentUser, responsibles } = useApp();
+  const { tanks, tests, notifications, currentUser, responsibles } = useApp();
 
   const apto = tanks.filter((t) => t.status === 'APTO').length;
   const naoApto = tanks.filter((t) => t.status === 'NAO_APTO').length;
@@ -34,16 +34,6 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   });
   const concluidosRecentes = tests.filter((t) => t.stage === 'CONCLUIDO').slice(0, 5);
 
-  const emTransporte = movements.filter((m) => m.status === 'EM_TRANSPORTE').length;
-  const entregues = movements.filter((m) => m.status === 'ENTREGUE').length;
-  const aguardandoColeta = movements.filter((m) => m.status === 'AGUARDANDO_COLETA').length;
-  const retornando = movements.filter((m) => m.status === 'RETORNANDO').length;
-  const retornosAtrasados = movements.filter((m) => {
-    if (m.returnDate) return false;
-    if (['RETORNADO', 'AGUARDANDO_NOVO_TESTE'].includes(m.status)) return false;
-    return m.deadline < today;
-  });
-
   const mainResp = responsibles.find((r) => r.isMain);
   const unread = notifications.filter((n) => !n.read);
 
@@ -57,7 +47,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             <p className="mt-1 text-sm text-slate-300">
               {currentUser.role === 'ADMINISTRADOR'
                 ? 'Você tem acesso completo ao sistema.'
-                : 'Você tem acesso às operações de testes e logística.'}
+                : 'Você tem acesso às operações de testes.'}
             </p>
           </div>
           {mainResp && (
@@ -92,18 +82,6 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           <StatCard label="Medição 48h Hoje" value={m48hToday.length} icon={<Clock size={24} className="text-white" />} color="bg-cyan-500" onClick={() => onNavigate('testes')} />
           <StatCard label="Testes Atrasados" value={atrasados.length} icon={<AlertTriangle size={24} className="text-white" />} color="bg-red-500" onClick={() => onNavigate('testes')} />
           <StatCard label="Concluídos Recentemente" value={concluidosRecentes.length} icon={<CheckCircle2 size={24} className="text-white" />} color="bg-emerald-500" onClick={() => onNavigate('testes')} />
-        </div>
-      </div>
-
-      {/* Logística section */}
-      <div>
-        <h3 className="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">Logística</h3>
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
-          <StatCard label="Em Transporte" value={emTransporte} icon={<Truck size={24} className="text-white" />} color="bg-indigo-500" onClick={() => onNavigate('logistica')} />
-          <StatCard label="Entregues" value={entregues} icon={<Package size={24} className="text-white" />} color="bg-teal-500" onClick={() => onNavigate('logistica')} />
-          <StatCard label="Aguardando Coleta" value={aguardandoColeta} icon={<Clock size={24} className="text-white" />} color="bg-orange-500" onClick={() => onNavigate('logistica')} />
-          <StatCard label="Retornando" value={retornando} icon={<MapPin size={24} className="text-white" />} color="bg-violet-500" onClick={() => onNavigate('logistica')} />
-          <StatCard label="Retornos Atrasados" value={retornosAtrasados.length} icon={<AlertTriangle size={24} className="text-white" />} color="bg-red-500" onClick={() => onNavigate('fora')} />
         </div>
       </div>
 

@@ -4,7 +4,6 @@ import { Layout, type ViewName } from '@/components/Layout';
 import { Dashboard } from '@/views/Dashboard';
 import { Testes } from '@/views/Testes';
 import { Botijoes } from '@/views/Botijoes';
-import { Logistica } from '@/views/Logistica';
 import { BotijoesFora } from '@/views/BotijoesFora';
 import { Historico } from '@/views/Historico';
 import { Relatorios } from '@/views/Relatorios';
@@ -24,7 +23,6 @@ function MainContent() {
       case 'inicio': return <Dashboard onNavigate={setView} />;
       case 'testes': return <Testes />;
       case 'botijoes': return <Botijoes />;
-      case 'logistica': return <Logistica />;
       case 'fora': return <BotijoesFora />;
       case 'historico': return <Historico />;
       case 'relatorios': return isAdmin ? <Relatorios /> : <AccessDenied />;

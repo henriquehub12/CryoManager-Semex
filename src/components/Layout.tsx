@@ -1,13 +1,13 @@
 import { useState, type ReactNode } from 'react';
 import {
-  LayoutDashboard, FlaskConical, Package, Truck, MapPin, History,
+  LayoutDashboard, FlaskConical, Package, MapPin, History,
   FileBarChart, Bell, Settings, Menu, X, ChevronDown, Shield, User,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import type { Role } from '@/types';
 
 export type ViewName =
-  | 'inicio' | 'testes' | 'botijoes' | 'logistica' | 'fora'
+  | 'inicio' | 'testes' | 'botijoes' | 'fora'
   | 'historico' | 'relatorios' | 'notificacoes' | 'admin';
 
 interface LayoutProps {
@@ -20,7 +20,6 @@ const navItems: { id: ViewName; label: string; icon: ReactNode; roles?: Role[] }
   { id: 'inicio', label: 'Início', icon: <LayoutDashboard size={20} /> },
   { id: 'testes', label: 'Testes', icon: <FlaskConical size={20} /> },
   { id: 'botijoes', label: 'Botijões', icon: <Package size={20} /> },
-  { id: 'logistica', label: 'Logística', icon: <Truck size={20} /> },
   { id: 'fora', label: 'Botijões Fora', icon: <MapPin size={20} /> },
   { id: 'historico', label: 'Histórico', icon: <History size={20} /> },
   { id: 'relatorios', label: 'Relatórios', icon: <FileBarChart size={20} />, roles: ['ADMINISTRADOR'] },
@@ -162,7 +161,7 @@ export function Layout({ currentView, onNavigate, children }: LayoutProps) {
                       <div className="flex-1 text-left">
                         <p className="text-sm">{u.name}</p>
                         <p className="text-[10px] text-slate-400">
-                          {u.role === 'ADMINISTRADOR' ? 'Administrador' : 'Operacional / Logística'}
+                          {u.role === 'ADMINISTRADOR' ? 'Administrador' : 'Operacional'}
                         </p>
                       </div>
                     </button>
