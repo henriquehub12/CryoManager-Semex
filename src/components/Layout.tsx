@@ -2,8 +2,10 @@ import { useState, type ReactNode } from 'react';
 import {
   LayoutDashboard, FlaskConical, Package, MapPin, History,
   FileBarChart, Bell, Settings, Menu, X, ChevronDown, Shield, User,
+  Type,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useFontSize, type FontSize } from '@/hooks/useFontSize';
 import type { Role } from '@/types';
 
 export type ViewName =
@@ -27,8 +29,15 @@ const navItems: { id: ViewName; label: string; icon: ReactNode; roles?: Role[] }
   { id: 'admin', label: 'Administração', icon: <Settings size={20} />, roles: ['ADMINISTRADOR'] },
 ];
 
+const fontOptions: { value: FontSize; label: string; short: string }[] = [
+  { value: 'normal', label: 'Fonte normal', short: 'A' },
+  { value: 'grande', label: 'Fonte grande', short: 'A+' },
+  { value: 'extra', label: 'Fonte extra grande', short: 'A++' },
+];
+
 export function Layout({ currentView, onNavigate, children }: LayoutProps) {
   const { currentUser, users, switchUser, notifications } = useApp();
+  const { fontSize, setFontSize } = useFontSize();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
 
@@ -113,6 +122,41 @@ export function Layout({ currentView, onNavigate, children }: LayoutProps) {
               Ambiente de Demonstração
             </span>
 
+            <div className="relative">
+              <div
+                role="group"
+                aria-label="Tamanho da fonte"
+                className="hidden items-center rounded-lg border border-slate-200 bg-white p-0.5 md:flex"
+              >
+                <Type size={14} className="ml-1.5 text-slate-400" aria-hidden="true" />
+                {fontOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setFontSize(opt.value)}
+                    title={opt.label}
+                    aria-pressed={fontSize === opt.value}
+                    className={`rounded-md px-2 py-1 text-xs font-bold transition-colors ${
+                      fontSize === opt.value
+                        ? 'bg-slate-800 text-white'
+                        : 'text-slate-500 hover:bg-slate-100'
+                    } ${opt.value === 'extra' ? 'text-sm' : ''}`}
+                  >
+                    {opt.short}
+                  </button>
+                ))}
+              </div>
+              <select
+                aria-label="Tamanho da fonte"
+                value={fontSize}
+                onChange={(e) => setFontSize(e.target.value as FontSize)}
+                className="rounded-lg border border-slate-200 bg-white px-1.5 py-1.5 text-xs text-slate-600 md:hidden"
+              >
+                <option value="normal">A</option>
+                <option value="grande">A+</option>
+                <option value="extra">A++</option>
+              </select>
+            </div>
+
             <button
               onClick={() => onNavigate('notificacoes')}
               className="relative rounded-lg p-2 text-slate-500 hover:bg-slate-100"
@@ -172,7 +216,7 @@ export function Layout({ currentView, onNavigate, children }: LayoutProps) {
           </div>
         </header>
 
-        <main className="p-4 lg:p-6">{children}</main>
+        <main className="p-4 lg:p-6" style={{ fontSize: 'inherit' }}>{children}</main>
       </div>
     </div>
   );
