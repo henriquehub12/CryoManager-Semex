@@ -14,3 +14,10 @@ Organizar o registro e o acompanhamento dos testes dos botijões, incluindo medi
 
 ## Status do projeto
 Protótipo acadêmico com dados simulados, desenvolvido para a disciplina de Projeto de Software.
+## Revisão do projeto
+
+O projeto passou por verificações de qualidade, incluindo testes automatizados, verificação de tipos e compilação.
+
+Foram realizados 9 testes automatizados, todos aprovados. O fluxo de integração contínua (GitHub Actions) também foi executado com sucesso.
+
+Esta etapa tem como objetivo revisar as alterações e manter a qualidade do MVP.
