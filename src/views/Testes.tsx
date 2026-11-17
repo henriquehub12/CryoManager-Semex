@@ -110,6 +110,24 @@ export function Testes() {
   ];
 
   const getEmployeeName = (id: string) => users.find((u) => u.id === id)?.name || '—';
+
+  const measureBadge = (done: boolean, late: boolean) => {
+    if (done) {
+      return (
+        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-800">
+          <CheckCircle2 size={10} /> Concluída
+        </span>
+      );
+    }
+    return (
+      <span className={`inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+        late ? 'border-red-200 bg-red-100 text-red-800' : 'border-amber-200 bg-amber-100 text-amber-800'
+      }`}>
+        <Clock size={10} /> Pendente
+      </span>
+    );
+  };
+
   const concludedTest = showResultModal ? tests.find((t) => t.id === showResultModal) : null;
   const concludedTank = concludedTest ? tanks.find((t) => t.id === concludedTest.tankId) : null;
 
@@ -181,23 +199,37 @@ export function Testes() {
 
                 {/* Middle: measurements */}
                 <div className="flex flex-1 flex-col gap-2">
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                     <div className="rounded-lg border border-slate-200 p-2.5">
-                      <p className="text-[10px] font-medium uppercase text-slate-400">Inicial</p>
-                      <p className="text-lg font-bold text-slate-700">{test.initialLevel} cm</p>
-                      <p className="text-[10px] text-slate-400">{formatDate(test.startDate)} {test.startTime}</p>
+                      <div className="flex items-center justify-between gap-1">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">Inicial</p>
+                      </div>
+                      <p className="text-lg font-bold text-slate-900">{test.initialLevel} cm</p>
+                      <p className="text-[10px] text-slate-500">{formatDate(test.startDate)} {test.startTime}</p>
                     </div>
-                    <div className={`rounded-lg border p-2.5 ${test.m24h ? 'border-slate-200' : isToday(test.expected24h) ? 'border-blue-300 bg-blue-50' : overdue ? 'border-red-300 bg-red-50' : 'border-slate-200'}`}>
-                      <p className="text-[10px] font-medium uppercase text-slate-400">24h</p>
-                      <p className="text-lg font-bold text-slate-700">{test.m24h ? `${test.m24h.level} cm` : '—'}</p>
-                      <p className="text-[10px] text-slate-400">Prev: {test.expected24h.slice(11)}</p>
-                      {diff24 !== null && <p className="text-[10px] font-semibold text-amber-600">Δ {diff24} cm</p>}
+                    <div className={`rounded-lg border-2 p-2.5 ${
+                      test.m24h ? 'border-emerald-300 bg-emerald-50/40' : overdue ? 'border-red-300 bg-red-50' : 'border-amber-300 bg-amber-50'
+                    }`}>
+                      <div className="flex items-center justify-between gap-1">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-700">24h</p>
+                        {measureBadge(!!test.m24h, overdue)}
+                      </div>
+                      <p className={`text-lg font-bold ${test.m24h ? 'text-slate-900' : 'text-slate-400'}`}>{test.m24h ? `${test.m24h.level} cm` : '—'}</p>
+                      <p className="text-[10px] text-slate-600">Prev: {test.expected24h.slice(11)}</p>
+                      {diff24 !== null && <p className="text-[10px] font-semibold text-amber-700">Δ {diff24} cm</p>}
                     </div>
-                    <div className={`rounded-lg border p-2.5 ${test.m48h ? 'border-slate-200' : isToday(test.expected48h) ? 'border-blue-300 bg-blue-50' : overdue && test.m24h ? 'border-red-300 bg-red-50' : 'border-slate-200'}`}>
-                      <p className="text-[10px] font-medium uppercase text-slate-400">48h</p>
-                      <p className="text-lg font-bold text-slate-700">{test.m48h ? `${test.m48h.level} cm` : '—'}</p>
-                      <p className="text-[10px] text-slate-400">Prev: {test.expected48h.slice(11)}</p>
-                      {diff48 !== null && <p className="text-[10px] font-semibold text-amber-600">Δ {diff48} cm</p>}
+                    <div className={`rounded-lg border-2 p-2.5 ${
+                      test.m48h ? 'border-emerald-300 bg-emerald-50/40'
+                        : test.m24h ? (overdue ? 'border-red-300 bg-red-50' : 'border-amber-300 bg-amber-50')
+                        : 'border-slate-200 bg-slate-50 opacity-70'
+                    }`}>
+                      <div className="flex items-center justify-between gap-1">
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-700">48h</p>
+                        {measureBadge(!!test.m48h, overdue && !!test.m24h)}
+                      </div>
+                      <p className={`text-lg font-bold ${test.m48h ? 'text-slate-900' : 'text-slate-400'}`}>{test.m48h ? `${test.m48h.level} cm` : '—'}</p>
+                      <p className="text-[10px] text-slate-600">Prev: {test.expected48h.slice(11)}</p>
+                      {diff48 !== null && <p className="text-[10px] font-semibold text-amber-700">Δ {diff48} cm</p>}
                     </div>
                   </div>
                 </div>
